@@ -41,6 +41,14 @@ const utilities = {
       breadcrumbs: false
     },
     {
+      id: 'util-product',
+      title: 'Products',
+      type: 'item',
+      url: '/utils/util-product',
+      icon: icons.IconBuildingStore,
+      breadcrumbs: false
+    },
+    {
       id: 'icons',
       title: 'Icons',
       type: 'collapse',

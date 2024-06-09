@@ -23,6 +23,7 @@ import {
 
 const UtilitiesShadow = () => {
   const [storeData, setStoreData] = useState([]);
+  const [, setBrandData] = useState([]); // State to store brand data
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -79,14 +80,22 @@ const UtilitiesShadow = () => {
   useEffect(() => {
     const fetchStoreData = async () => {
       setIsLoading(true);
-      setError(null);
-
       try {
-        const response = await axios.get('https://3.1.81.96/api/Stores?pageNumber=1&pageSize=10');
-        setStoreData(response.data);
+        const [storeResponse, brandResponse] = await Promise.all([
+          axios.get('https://3.1.81.96/api/Stores?pageNumber=1&pageSize=10'),
+          axios.get('https://3.1.81.96/api/Brand?pageNumber=1&pageSize=10') // Replace with your brand API endpoint
+        ]);
+
+        // Map brand names to stores
+        const storeDataWithBrandNames = storeResponse.data.map((store) => ({
+          ...store,
+          brandName: brandResponse.data.find((brand) => brand.brandID === store.brandID)?.brandName || 'Unknown Brand'
+        }));
+        setStoreData(storeDataWithBrandNames);
+        setBrandData(brandResponse.data); // Store brand data for future use
       } catch (error) {
-        console.error('Error fetching store data:', error);
-        setError(`Error: ${error.message}`);
+        console.error('Error fetching data:', error);
+        setError(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -133,7 +142,7 @@ const UtilitiesShadow = () => {
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Brand ID</TableCell>
+                  <TableCell>Brand Name</TableCell>
                   <TableCell>Location</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
@@ -141,7 +150,7 @@ const UtilitiesShadow = () => {
               <TableBody>
                 {storeData.map((store) => (
                   <TableRow key={store.storeID}>
-                    <TableCell>{store.brandID}</TableCell>
+                    <TableCell>{store.brandName}</TableCell>
                     <TableCell>{store.storeLocation}</TableCell>
                     <TableCell>
                       <Button variant="contained" color="error" size="small" onClick={() => handleDelete(store.storeID)}>

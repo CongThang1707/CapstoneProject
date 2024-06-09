@@ -42,8 +42,6 @@ const UtilitiesProduct = () => {
       const response = await axios.post('https://3.1.81.96/api/Product', newProductData);
       if (response.status === 201) {
         // Successfully created new product
-
-        // Reset the form
         setNewProductData({
           brandID: '',
           categoryID: '',

@@ -50,6 +50,7 @@ const StoreDetails = () => {
           <>
             <p>Store ID: {storeData.storeID}</p>
             <p>Brand ID: {storeData.brandID}</p>
+            <p>Brand Name: {storeData.brandName}</p>
             <p>Location: {storeData.storeLocation}</p>
             <p>Contact Email: {storeData.storeContactEmail}</p>
             <p>Contact Number: {storeData.storeContactNumber}</p>
